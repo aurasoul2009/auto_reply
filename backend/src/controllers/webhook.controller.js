@@ -84,6 +84,20 @@ function normalizeInstagramMessages(payload) {
   return messages.filter((message) => message.senderId);
 }
 
+function logInstagramWebhookDebug(req) {
+  const payload = req.body || {};
+  if (payload.object !== "instagram") return;
+
+  console.log("=== INSTAGRAM WEBHOOK RECEIVED ===");
+  console.log(JSON.stringify(req.body, null, 2));
+  console.log(
+    "x-hub-signature-256:",
+    req.headers["x-hub-signature-256"]
+  );
+  console.log("payload.object:", payload.object);
+  console.log("payload.entry:", JSON.stringify(payload.entry, null, 2));
+}
+
 async function processNormalizedMessage(message) {
   try {
     await MessageLog.create({
@@ -133,6 +147,7 @@ async function processWebhookPayload(payload) {
 }
 
 function receiveWebhook(req, res) {
+  logInstagramWebhookDebug(req);
   res.sendStatus(200);
   setImmediate(() => {
     processWebhookPayload(req.body).catch((error) => {
