@@ -1,0 +1,50 @@
+<%- include("partials/admin-start", { pageTitle }) %>
+
+<section class="panel">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Campaign result</p>
+      <h2><%= campaign.title %></h2>
+    </div>
+    <a class="button button-secondary" href="/admin/campaigns">Back to campaigns</a>
+  </div>
+
+  <dl class="detail-grid">
+    <div><dt>Template</dt><dd><code><%= campaign.templateName %></code></dd></div>
+    <div><dt>Language</dt><dd><%= campaign.languageCode %></dd></div>
+    <div><dt>Status</dt><dd><span class="badge badge-<%= campaign.status === 'completed' ? 'success' : campaign.status === 'failed' ? 'danger' : 'warning' %>"><%= campaign.status.replaceAll("_", " ") %></span></dd></div>
+    <div><dt>Total recipients</dt><dd><%= campaign.totalRecipients %></dd></div>
+    <div><dt>Sent</dt><dd><%= campaign.sentCount %></dd></div>
+    <div><dt>Failed</dt><dd><%= campaign.failedCount %></dd></div>
+    <div><dt>Skipped</dt><dd><%= campaign.skippedCount %></dd></div>
+    <div><dt>Started</dt><dd><%= formatDate(campaign.startedAt) %></dd></div>
+    <div><dt>Completed</dt><dd><%= formatDate(campaign.completedAt) %></dd></div>
+  </dl>
+
+  <% if (campaign.templateVariables && campaign.templateVariables.length) { %>
+    <div class="details-box">
+      <strong>Template variables</strong>
+      <p><%= campaign.templateVariables.join(" | ") %></p>
+    </div>
+  <% } %>
+</section>
+
+<section class="panel">
+  <h2>Errors</h2>
+  <% if (!campaign.errors.length) { %>
+    <p class="empty">No campaign errors were recorded.</p>
+  <% } else { %>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Recipient</th><th>Error</th></tr></thead>
+        <tbody>
+          <% campaign.errors.forEach((error) => { %>
+            <tr><td><%= error.recipient %></td><td><%= error.message %></td></tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</section>
+
+<%- include("partials/admin-end") %>

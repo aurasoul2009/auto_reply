@@ -1,0 +1,5 @@
+<% if (flash) { %>
+  <div class="alert alert-<%= flash.type === 'error' ? 'error' : 'success' %>" role="status">
+    <strong><%= flash.message %></strong>
+  </div>
+<% } %>

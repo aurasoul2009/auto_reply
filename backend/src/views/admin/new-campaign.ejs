@@ -1,0 +1,65 @@
+<%- include("partials/admin-start", { pageTitle }) %>
+
+<div class="content-grid">
+  <section class="panel">
+    <form class="stack" action="/admin/campaigns/send" method="post">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <label>
+        Campaign title
+        <input name="title" type="text" maxlength="200" placeholder="Festival Glow Offer" required>
+      </label>
+      <div class="form-grid">
+        <label>
+          WhatsApp template name
+          <input name="templateName" type="text" pattern="[a-z0-9_]+" list="templateNames" placeholder="festival_offer" required>
+          <datalist id="templateNames">
+            <% templates.forEach((template) => { %>
+              <option value="<%= template.templateName %>"><%= template.label %></option>
+            <% }) %>
+          </datalist>
+        </label>
+        <label>
+          Language code
+          <input name="languageCode" type="text" value="en_US" pattern="[a-z]{2,3}(_[A-Z]{2})?" required>
+        </label>
+      </div>
+
+      <fieldset>
+        <legend>Optional body template variables</legend>
+        <p class="muted">Enter values in the same order as {{1}}, {{2}}, and {{3}} in Meta.</p>
+        <div class="form-grid form-grid-three">
+          <label>Variable 1<input name="variable1" type="text" maxlength="1000"></label>
+          <label>Variable 2<input name="variable2" type="text" maxlength="1000"></label>
+          <label>Variable 3<input name="variable3" type="text" maxlength="1000"></label>
+        </div>
+      </fieldset>
+
+      <div class="form-actions">
+        <details class="preview">
+          <summary class="button button-secondary">Preview eligible customers count</summary>
+          <div class="preview-card">
+            <strong><%= Math.min(eligibleCount, recipientLimit).toLocaleString("en-IN") %></strong>
+            <span>eligible customers will be processed</span>
+            <% if (eligibleCount > recipientLimit) { %>
+              <small><%= eligibleCount - recipientLimit %> customers exceed the current campaign cap.</small>
+            <% } %>
+          </div>
+        </details>
+        <button class="button button-primary" type="submit">Send Bulk Message</button>
+      </div>
+    </form>
+  </section>
+
+  <aside class="panel guidance">
+    <h2>Before sending</h2>
+    <ul class="check-list">
+      <li>The template must already be approved in Meta.</li>
+      <li>Only subscribed, opted-in customers with phone numbers are selected.</li>
+      <li>Messages are sent one at a time with a <%= delayMs %> ms delay.</li>
+      <li>Use <code>hello_world</code> only for Meta test-number testing.</li>
+      <li>Use approved <%= brand.shortName %> templates such as <code>festival_offer</code> or <code>discount_campaign</code> in production.</li>
+    </ul>
+  </aside>
+</div>
+
+<%- include("partials/admin-end") %>

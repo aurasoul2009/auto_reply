@@ -1,0 +1,23 @@
+<%- include("partials/admin-start", { pageTitle }) %>
+
+<section class="panel">
+  <div class="section-heading">
+    <div>
+      <h2>Bulk message templates</h2>
+      <p class="muted">Create these as approved WhatsApp templates in Meta before production sending.</p>
+    </div>
+    <a class="button button-primary" href="/admin/bulk-messages">Use template</a>
+  </div>
+
+  <div class="template-grid">
+    <% templates.forEach((template) => { %>
+      <article class="template-card">
+        <p class="eyebrow"><%= template.label %></p>
+        <h3><code><%= template.templateName %></code></h3>
+        <p class="muted"><%= template.description %></p>
+      </article>
+    <% }) %>
+  </div>
+</section>
+
+<%- include("partials/admin-end") %>

@@ -1,0 +1,35 @@
+<%- include("partials/admin-start", { pageTitle }) %>
+
+<section class="stat-grid" aria-label="<%= brand.shortName %> analytics">
+  <article class="stat-card">
+    <span>Total Customers</span>
+    <strong><%= analytics.totalCustomers.toLocaleString("en-IN") %></strong>
+  </article>
+  <article class="stat-card">
+    <span>Subscribed Customers</span>
+    <strong><%= analytics.subscribedCustomers.toLocaleString("en-IN") %></strong>
+  </article>
+  <article class="stat-card">
+    <span>Opted-in Customers</span>
+    <strong><%= analytics.optedInCustomers.toLocaleString("en-IN") %></strong>
+  </article>
+  <article class="stat-card">
+    <span>Completed Consultations</span>
+    <strong><%= analytics.consultationsCompleted.toLocaleString("en-IN") %></strong>
+  </article>
+  <article class="stat-card">
+    <span>Product Enquiries</span>
+    <strong><%= analytics.productEnquiries.toLocaleString("en-IN") %></strong>
+  </article>
+  <article class="stat-card">
+    <span>Failed Messages</span>
+    <strong><%= analytics.failedMessages.toLocaleString("en-IN") %></strong>
+  </article>
+</section>
+
+<section class="panel">
+  <h2>Message health</h2>
+  <p class="muted">Sent messages: <strong><%= analytics.sentMessages.toLocaleString("en-IN") %></strong>. Failed messages: <strong><%= analytics.failedMessages.toLocaleString("en-IN") %></strong>.</p>
+</section>
+
+<%- include("partials/admin-end") %>

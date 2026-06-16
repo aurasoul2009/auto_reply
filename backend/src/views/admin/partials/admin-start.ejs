@@ -1,0 +1,40 @@
+<%- include("head", { pageTitle }) %>
+<div class="app-shell">
+  <aside class="sidebar">
+    <a class="brand" href="/admin">
+      <span class="brand-mark"><%= brand.logoText %></span>
+      <span>
+        <strong><%= brand.shortName %></strong>
+        <small><%= brand.tagline %></small>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label="Admin navigation">
+      <a class="<%= currentPath === '/' ? 'active' : '' %>" href="/admin">Dashboard</a>
+      <a class="<%= currentPath.startsWith('/customers') || currentPath.startsWith('/contacts') ? 'active' : '' %>" href="/admin/customers">Customers</a>
+      <a class="<%= currentPath.startsWith('/campaigns') ? 'active' : '' %>" href="/admin/campaigns">Campaigns</a>
+      <a class="<%= currentPath.startsWith('/bulk-messages') ? 'active' : '' %>" href="/admin/bulk-messages">Bulk Messages</a>
+      <a class="<%= currentPath.startsWith('/consultations') ? 'active' : '' %>" href="/admin/consultations">Consultations</a>
+      <a class="<%= currentPath.startsWith('/products') ? 'active' : '' %>" href="/admin/products">Products</a>
+      <a class="<%= currentPath.startsWith('/templates') ? 'active' : '' %>" href="/admin/templates">Templates</a>
+      <a class="<%= currentPath.startsWith('/analytics') ? 'active' : '' %>" href="/admin/analytics">Analytics</a>
+      <a class="<%= currentPath.startsWith('/messages') ? 'active' : '' %>" href="/admin/messages">Logs</a>
+      <a class="<%= currentPath.startsWith('/settings') ? 'active' : '' %>" href="/admin/settings">Settings</a>
+    </nav>
+
+    <form class="logout-form" action="/admin/logout" method="post">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <button class="button button-quiet" type="submit">Log out</button>
+    </form>
+  </aside>
+
+  <main class="main">
+    <header class="page-header">
+      <div>
+        <p class="eyebrow"><%= brand.adminEyebrow %></p>
+        <h1><%= pageTitle %></h1>
+      </div>
+      <span class="admin-name"><%= adminUser %></span>
+    </header>
+
+    <%- include("flash") %>

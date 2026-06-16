@@ -1,0 +1,45 @@
+<%- include("partials/admin-start", { pageTitle }) %>
+
+<section class="panel">
+  <div class="section-heading">
+    <div>
+      <h2>Recent message logs</h2>
+      <p class="muted">Showing the latest 100 incoming and outgoing events.</p>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Platform</th>
+          <th>Direction</th>
+          <th>Sender / recipient</th>
+          <th>Incoming</th>
+          <th>Outgoing</th>
+          <th>Status</th>
+          <th>Error</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (!messages.length) { %>
+          <tr><td colspan="8" class="empty">No message logs recorded.</td></tr>
+        <% } %>
+        <% messages.forEach((message) => { %>
+          <tr>
+            <td><%= message.platform %></td>
+            <td><%= message.direction %></td>
+            <td><small><%= message.senderId || "-" %><br><%= message.recipientId || "-" %></small></td>
+            <td title="<%= message.incomingText || '' %>"><%= truncate(message.incomingText) || "-" %></td>
+            <td title="<%= message.outgoingText || '' %>"><%= truncate(message.outgoingText) || "-" %></td>
+            <td><span class="badge badge-<%= message.status === 'sent' || message.status === 'received' ? 'success' : message.status === 'failed' ? 'danger' : 'muted' %>"><%= message.status %></span></td>
+            <td title="<%= message.errorMessage || '' %>"><%= truncate(message.errorMessage) || "-" %></td>
+            <td><%= formatDate(message.createdAt) %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<%- include("partials/admin-end") %>

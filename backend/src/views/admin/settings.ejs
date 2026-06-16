@@ -1,0 +1,55 @@
+<%- include("partials/admin-start", { pageTitle }) %>
+
+<section class="panel">
+  <form class="stack" action="/admin/settings/update" method="post">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+    <div class="form-grid">
+      <label>
+        Business name
+        <input name="businessName" type="text" maxlength="100" value="<%= config.businessName %>" required>
+      </label>
+      <label>
+        Support WhatsApp number
+        <input name="staffWhatsAppNumber" type="text" value="<%= config.staffWhatsAppNumber %>">
+      </label>
+    </div>
+
+    <label>
+      Welcome message
+      <textarea name="welcomeMessage" rows="4" maxlength="1024" required><%= config.welcomeMessage %></textarea>
+    </label>
+
+    <% config.buttons.forEach((button, index) => { %>
+      <fieldset>
+        <legend>Button <%= index + 1 %></legend>
+        <div class="form-grid">
+          <label>
+            Label
+            <input name="button<%= index + 1 %>Label" type="text" maxlength="20" value="<%= button.label %>" required>
+          </label>
+          <label>
+            Reply
+            <textarea name="button<%= index + 1 %>Reply" rows="3" maxlength="2000" required><%= button.replyMessage %></textarea>
+          </label>
+        </div>
+        <p class="muted">Payload remains <code><%= button.payload %></code>.</p>
+      </fieldset>
+    <% }) %>
+
+    <label>
+      Fallback message
+      <textarea name="fallbackMessage" rows="3" maxlength="2000" required><%= config.fallbackMessage %></textarea>
+    </label>
+    <label>
+      STOP reply message
+      <textarea name="stopReplyMessage" rows="3" maxlength="2000" required><%= config.stopReplyMessage %></textarea>
+    </label>
+
+    <div class="form-actions form-actions-end">
+      <button class="button button-primary" type="submit">Save settings</button>
+    </div>
+  </form>
+</section>
+
+<%- include("partials/admin-end") %>

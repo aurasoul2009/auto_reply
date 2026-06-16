@@ -1,0 +1,78 @@
+<%- include("partials/admin-start", { pageTitle }) %>
+
+<section class="panel">
+  <div class="section-heading">
+    <div>
+      <h2>Upload customers</h2>
+      <p class="muted">Excel columns must be named <code>name</code> and <code>phone</code>.</p>
+    </div>
+  </div>
+  <form class="inline-form" action="/admin/contacts/upload" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <label class="file-field">
+      <span>Excel file</span>
+      <input name="file" type="file" accept=".xlsx,.xls" required>
+    </label>
+    <button class="button button-primary" type="submit">Upload customers</button>
+  </form>
+
+  <% if (flash && flash.details) { %>
+    <div class="result-grid">
+      <div><span>Inserted</span><strong><%= flash.details.inserted %></strong></div>
+      <div><span>Skipped</span><strong><%= flash.details.skipped %></strong></div>
+      <div><span>Invalid</span><strong><%= flash.details.invalidNumbers.length %></strong></div>
+      <div><span>Duplicates</span><strong><%= flash.details.duplicates.length %></strong></div>
+    </div>
+    <% if (flash.details.invalidNumbers.length || flash.details.duplicates.length) { %>
+      <details class="details-box">
+        <summary>View skipped rows</summary>
+        <% flash.details.invalidNumbers.slice(0, 20).forEach((item) => { %>
+          <p>Row <%= item.row %>: invalid phone "<%= item.phone %>"</p>
+        <% }) %>
+        <% flash.details.duplicates.slice(0, 20).forEach((item) => { %>
+          <p>Row <%= item.row %>: duplicate <%= item.phone %> (<%= item.source %>)</p>
+        <% }) %>
+      </details>
+    <% } %>
+  <% } %>
+</section>
+
+<section class="panel">
+  <div class="section-heading">
+    <div>
+      <h2>Recent customers</h2>
+      <p class="muted">Showing the latest 100 records.</p>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Subscribed</th>
+          <th>Opt-in</th>
+          <th>Source</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (!contacts.length) { %>
+          <tr><td colspan="6" class="empty">No customers uploaded yet.</td></tr>
+        <% } %>
+        <% contacts.forEach((contact) => { %>
+          <tr>
+            <td><%= contact.name || "Unnamed" %></td>
+            <td><%= contact.phone || "Not available" %></td>
+            <td><span class="badge <%= contact.subscribed ? 'badge-success' : 'badge-muted' %>"><%= contact.subscribed ? "Yes" : "No" %></span></td>
+            <td><span class="badge <%= contact.optIn ? 'badge-success' : 'badge-warning' %>"><%= contact.optIn ? "Yes" : "No" %></span></td>
+            <td><%= contact.source %></td>
+            <td><%= formatDate(contact.createdAt) %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<%- include("partials/admin-end") %>

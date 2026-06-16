@@ -1,0 +1,10 @@
+<%- include("partials/admin-start", { pageTitle }) %>
+
+<section class="panel error-panel">
+  <span class="error-code"><%= statusCode %></span>
+  <h2>The page could not be loaded</h2>
+  <p class="muted"><%= errorMessage %></p>
+  <a class="button button-primary" href="/admin">Return to dashboard</a>
+</section>
+
+<%- include("partials/admin-end") %>

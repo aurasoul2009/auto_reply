@@ -1,0 +1,43 @@
+<%- include("partials/admin-start", { pageTitle }) %>
+
+<section class="panel">
+  <div class="section-heading">
+    <div>
+      <h2>Skin consultation requests</h2>
+      <p class="muted">Customer details collected from the WhatsApp consultation flow.</p>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Age</th>
+          <th>Skin type</th>
+          <th>Concern</th>
+          <th>Phone</th>
+          <th>Status</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (!consultations.length) { %>
+          <tr><td colspan="7" class="empty">No consultation requests yet.</td></tr>
+        <% } %>
+        <% consultations.forEach((consultation) => { %>
+          <tr>
+            <td><%= consultation.name || "Collecting" %></td>
+            <td><%= consultation.age || "-" %></td>
+            <td><%= consultation.skinType || "-" %></td>
+            <td title="<%= consultation.skinConcern || '' %>"><%= truncate(consultation.skinConcern) || "-" %></td>
+            <td><%= consultation.phoneNumber || consultation.phone || "-" %></td>
+            <td><span class="badge badge-<%= consultation.status === 'completed' ? 'success' : consultation.status === 'cancelled' ? 'muted' : 'warning' %>"><%= consultation.status %></span></td>
+            <td><%= formatDate(consultation.createdAt) %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<%- include("partials/admin-end") %>

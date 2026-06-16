@@ -1,0 +1,22 @@
+<%- include("partials/admin-start", { pageTitle }) %>
+
+<section class="panel">
+  <div class="section-heading">
+    <div>
+      <h2><%= brand.shortName %> product catalog</h2>
+      <p class="muted">Products shown in the WhatsApp product enquiry response.</p>
+    </div>
+  </div>
+  <div class="product-grid">
+    <% products.forEach((product) => { %>
+      <article class="product-card">
+        <span class="product-icon"><%= brand.logoText %></span>
+        <h3><%= product.name %></h3>
+        <p><%= product.description %></p>
+        <span class="badge <%= product.isActive ? 'badge-success' : 'badge-muted' %>"><%= product.isActive ? "Active" : "Inactive" %></span>
+      </article>
+    <% }) %>
+  </div>
+</section>
+
+<%- include("partials/admin-end") %>

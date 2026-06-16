@@ -1,0 +1,39 @@
+<%- include("partials/head", { pageTitle }) %>
+<main class="login-shell">
+  <section class="login-card">
+    <div class="login-brand">
+      <span class="brand-mark"><%= brand.logoText %></span>
+      <div>
+        <strong><%= brand.shortName %></strong>
+        <small><%= brand.tagline %></small>
+      </div>
+    </div>
+    <p class="eyebrow">Secure admin access</p>
+    <h1>Welcome back</h1>
+    <p class="muted"><%= brand.description %></p>
+
+    <% if (typeof loginError !== "undefined" && loginError) { %>
+      <div class="alert alert-error" role="alert"><%= loginError %></div>
+    <% } %>
+    <% if (!credentialsConfigured) { %>
+      <div class="alert alert-error" role="alert">
+        Set ADMIN_USERNAME and ADMIN_PASSWORD before signing in.
+      </div>
+    <% } %>
+
+    <form class="stack" action="/admin/login" method="post">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <label>
+        Username
+        <input name="username" type="text" autocomplete="username" required autofocus>
+      </label>
+      <label>
+        Password
+        <input name="password" type="password" autocomplete="current-password" required>
+      </label>
+      <button class="button button-primary button-full" type="submit">Sign in</button>
+    </form>
+  </section>
+</main>
+</body>
+</html>
