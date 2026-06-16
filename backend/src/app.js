@@ -68,6 +68,17 @@ app.use(
   })
 );
 
+app.get("/", (_req, res) => {
+  res.status(200).json({
+    status: "ok",
+    message: "Rhythm Skin Care Automation API is live"
+  });
+});
+
+app.head("/", (_req, res) => {
+  res.sendStatus(200);
+});
+
 app.get("/health", (_req, res) => {
   const mongoConnected = mongoose.connection.readyState === 1;
   res.status(mongoConnected ? 200 : 503).json({
