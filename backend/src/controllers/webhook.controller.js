@@ -61,19 +61,78 @@ function normalizeInstagramMessages(payload) {
 
   for (const entry of payload.entry || []) {
     for (const event of entry.messaging || []) {
-      if (!event.message || event.message.is_echo || event.read || event.delivery) {
+      const senderId = event.sender?.id;
+      const recipientId =
+        event.recipient?.id ||
+        entry.id ||
+        env.instagramBusinessAccountId;
+      const accountIds = [
+        event.recipient?.id,
+        entry.id,
+        env.instagramBusinessAccountId
+      ].filter(Boolean);
+      const eventType = event.message?.quick_reply
+        ? "quick_reply"
+        : event.message?.text
+          ? "text"
+          : event.message_edit
+            ? "message_edit"
+            : event.read
+              ? "read"
+              : event.delivery
+                ? "delivery"
+                : event.message
+                  ? "unsupported_message"
+                  : "unsupported_event";
+
+      const ignore = (reason) => {
+        logger.info("Instagram webhook event ignored", {
+          senderId,
+          recipientId,
+          eventType,
+          reason
+        });
+      };
+
+      if (!senderId) {
+        ignore("missing_sender_id");
+        continue;
+      }
+      if (accountIds.includes(senderId)) {
+        ignore("self_sender");
+        continue;
+      }
+      if (!event.message) {
+        ignore(eventType);
+        continue;
+      }
+      if (event.message.is_echo) {
+        ignore("echo_message");
+        continue;
+      }
+      if (event.read || event.delivery) {
+        ignore(eventType);
+        continue;
+      }
+      if (!event.message.text && !event.message.quick_reply?.payload) {
+        ignore("unsupported_message_without_text");
         continue;
       }
 
+      logger.info("Instagram webhook message accepted", {
+        senderId,
+        recipientId,
+        eventType,
+        incomingText: event.message.text || "",
+        quickReplyPayload: event.message.quick_reply?.payload || ""
+      });
+
       messages.push({
         platform: "instagram",
-        senderId: event.sender?.id,
-        recipientId:
-          event.recipient?.id ||
-          entry.id ||
-          env.instagramBusinessAccountId,
+        senderId,
+        recipientId,
         messageId: event.message.mid,
-        messageType: event.message.quick_reply ? "quick_reply" : "text",
+        messageType: eventType,
         text: event.message.text || "",
         payload: event.message.quick_reply?.payload || "",
         rawPayload: event

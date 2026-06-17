@@ -13,6 +13,11 @@ const DEFAULT_CONFIG = Object.freeze({
   isActive: true
 });
 
+const INSTAGRAM_REPLY_CONFIG = Object.freeze({
+  welcomeMessage: BRAND.automation.instagramWelcomeMessage,
+  buttons: BRAND.automation.instagramMenuOptions
+});
+
 function normalizeComparable(value) {
   return String(value || "")
     .trim()
@@ -170,13 +175,23 @@ function formatMenuText(config) {
   return interpolateMessage(config.welcomeMessage, config);
 }
 
+function getInstagramReplyConfig(config) {
+  return {
+    ...config,
+    welcomeMessage: INSTAGRAM_REPLY_CONFIG.welcomeMessage,
+    buttons: INSTAGRAM_REPLY_CONFIG.buttons
+  };
+}
+
 module.exports = {
   DEFAULT_CONFIG,
+  INSTAGRAM_REPLY_CONFIG,
   ensureDefaultConfig,
   getConfig,
   updateConfig,
   interpolateMessage,
   findMatchingButton,
   formatMenuText,
+  getInstagramReplyConfig,
   normalizeComparable
 };

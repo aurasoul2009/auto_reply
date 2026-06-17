@@ -20,7 +20,9 @@ const BRAND = Object.freeze({
   automation: {
     welcomeMessage:
       "Hi \u{1F497} Welcome to Rhythm Skin Care!\n\nThank you for reaching out.\n\nHow can we help you today?\n\n1. Products\n2. Offers\n3. Skin Care Guidance\n4. Talk to Support",
-    triggerWords: ["hi", "hello", "start"],
+    instagramWelcomeMessage:
+      "Hi \u{1F44B} Welcome to Rhythm Skin Care!\n\nHow can we help you today?",
+    triggerWords: ["hi", "hello", "hey", "hii", "start"],
     fallbackMessage:
       "Please reply with 1 for Products, 2 for Offers, 3 for Skin Care Guidance, or 4 to Talk to Support.",
     stopReplyMessage:
@@ -43,6 +45,26 @@ const BRAND = Object.freeze({
         payload: "book_consultation",
         replyMessage:
           "Let's understand your skin better. Please share your full name to begin."
+      },
+      {
+        label: "Talk to Support",
+        payload: "talk_to_support",
+        replyMessage:
+          "Our support team will help you shortly.\nWhatsApp: {{staffWhatsAppNumber}}\nEmail: {{supportEmail}}"
+      }
+    ],
+    instagramMenuOptions: [
+      {
+        label: "View Products",
+        payload: "view_products",
+        replyMessage:
+          "Explore Rhythm Skin Care essentials: Face Wash, Moisturizer, Sunscreen, Face Serum, Night Cream, and Lip Balm."
+      },
+      {
+        label: "Offers",
+        payload: "offers_discounts",
+        replyMessage:
+          "Our offers change often. Ask us about current skincare bundles, festival offers, and limited-time discounts."
       },
       {
         label: "Talk to Support",

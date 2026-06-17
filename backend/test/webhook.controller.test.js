@@ -96,3 +96,45 @@ test("normalizes Instagram Login API account events from entry id", () => {
   assert.equal(result[0].recipientId, "17841400000000000");
   assert.equal(result[0].text, "hi");
 });
+
+test("ignores Instagram events without text, sender id, or user sender", () => {
+  const result = normalizeInstagramMessages({
+    object: "instagram",
+    entry: [
+      {
+        id: "ig-business-id",
+        messaging: [
+          {
+            sender: { id: "ig-business-id" },
+            recipient: { id: "igsid-3" },
+            message: { mid: "mid.4", text: "echo" }
+          },
+          {
+            recipient: { id: "ig-business-id" },
+            message: { mid: "mid.5", text: "missing sender" }
+          },
+          {
+            sender: { id: "igsid-4" },
+            recipient: { id: "ig-business-id" },
+            message: {
+              mid: "mid.6",
+              attachments: [{ type: "image" }]
+            }
+          },
+          {
+            sender: { id: "igsid-5" },
+            recipient: { id: "ig-business-id" },
+            read: { mid: "mid.7" }
+          },
+          {
+            sender: { id: "igsid-6" },
+            recipient: { id: "ig-business-id" },
+            delivery: { mids: ["mid.8"] }
+          }
+        ]
+      }
+    ]
+  });
+
+  assert.equal(result.length, 0);
+});

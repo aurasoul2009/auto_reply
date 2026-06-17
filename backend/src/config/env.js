@@ -34,11 +34,12 @@ const env = Object.freeze({
     process.env.WHATSAPP_API_VERSION,
     "v25.0"
   ),
-  instagramAccessToken: process.env.INSTAGRAM_ACCESS_TOKEN || "",
+  instagramAccessToken:
+    process.env.INSTAGRAM_ACCESS_TOKEN || process.env.META_ACCESS_TOKEN || "",
   instagramBusinessAccountId:
-    process.env.INSTAGRAM_BUSINESS_ACCOUNT_ID || "",
+    process.env.INSTAGRAM_BUSINESS_ACCOUNT_ID || process.env.IG_PAGE_ID || "",
   instagramApiVersion: normalizeApiVersion(
-    process.env.INSTAGRAM_API_VERSION,
+    process.env.INSTAGRAM_API_VERSION || process.env.META_API_VERSION,
     "v25.0"
   ),
   appBaseUrl: process.env.APP_BASE_URL || "",

@@ -7,6 +7,7 @@ const {
   interpolateMessage,
   findMatchingButton,
   formatMenuText,
+  getInstagramReplyConfig,
   normalizeComparable
 } = require("./config.service");
 const {
@@ -156,8 +157,8 @@ async function sendTextReply(message, text, payload) {
 }
 
 async function sendWelcome(message, config) {
-  const text = formatMenuText(config);
   if (message.platform === "whatsapp") {
+    const text = formatMenuText(config);
     if (config.buttons.length > 3) {
       return sendAndLog(message, "menu_text", text, null, () =>
         whatsappService.sendTextMessage(message.senderId, text)
@@ -169,8 +170,14 @@ async function sendWelcome(message, config) {
     );
   }
 
+  const instagramConfig = getInstagramReplyConfig(config);
+  const text = formatMenuText(instagramConfig);
   return sendAndLog(message, "quick_replies", text, null, () =>
-    instagramService.sendQuickReplies(message.senderId, text, config.buttons)
+    instagramService.sendQuickReplies(
+      message.senderId,
+      text,
+      instagramConfig.buttons
+    )
   );
 }
 
@@ -228,7 +235,15 @@ async function handleIncomingMessage(message) {
     return;
   }
 
-  const triggerWords = config.triggerWords.map(normalizeComparable);
+  const triggerWords = [
+    ...new Set([
+      ...config.triggerWords,
+      "hi",
+      "hello",
+      "hey",
+      "hii"
+    ])
+  ].map(normalizeComparable);
   if (triggerWords.includes(normalized)) {
     await sendWelcome(message, config);
     return;
