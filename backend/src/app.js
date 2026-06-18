@@ -31,6 +31,52 @@ const testRoutes = require("./routes/test.routes");
 const adminRoutes = require("./routes/admin.routes");
 
 const app = express();
+const legalContactEmail = "rhythm.skintunes@gmail.com";
+
+function sendLegalPage(res, title, sections) {
+  const items = sections
+    .map((section) => `<li>${section}</li>`)
+    .join("");
+
+  res.status(200).type("html").send(`<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>${title} | Rhythm Skin Care</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 32px;
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        color: #4A3F35;
+        background: #FFF8F4;
+      }
+      main {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 28px;
+        border-radius: 16px;
+        background: #ffffff;
+      }
+      h1 {
+        margin-top: 0;
+      }
+      a {
+        color: #9b6a61;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>${title}</h1>
+      <p><strong>Business/App:</strong> Rhythm Skin Care</p>
+      <ul>${items}</ul>
+    </main>
+  </body>
+</html>`);
+}
 
 app.set("trust proxy", 1);
 app.set("view engine", "ejs");
@@ -77,6 +123,32 @@ app.get("/", (_req, res) => {
 
 app.head("/", (_req, res) => {
   res.sendStatus(200);
+});
+
+app.get("/privacy", (_req, res) => {
+  sendLegalPage(res, "Privacy Policy", [
+    "We only use Instagram messaging data to respond to customer messages.",
+    "We do not sell user data.",
+    "We do not send spam.",
+    "We only respond when users message the Instagram business account.",
+    `Contact: <a href="mailto:${legalContactEmail}">${legalContactEmail}</a>`
+  ]);
+});
+
+app.get("/terms", (_req, res) => {
+  sendLegalPage(res, "Terms of Service", [
+    "This service provides automated Instagram DM replies for customer support.",
+    "Users should not misuse the service.",
+    `Contact: <a href="mailto:${legalContactEmail}">${legalContactEmail}</a>`
+  ]);
+});
+
+app.get("/data-deletion", (_req, res) => {
+  sendLegalPage(res, "Data Deletion Instructions", [
+    `Users can request deletion of any stored data by emailing <a href="mailto:${legalContactEmail}">${legalContactEmail}</a>.`,
+    "Include subject: Data Deletion Request.",
+    "We will process deletion requests within a reasonable time."
+  ]);
 });
 
 app.get("/health", (_req, res) => {
